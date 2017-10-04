@@ -1,0 +1,1 @@
+# resolve-umd-exportor

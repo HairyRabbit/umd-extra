@@ -19,8 +19,8 @@ test('Find jquery umd file', () => {
     .toEqual('node_modules/jquery/dist/jquery.min.js')
 })
 
-test('Find file path failed.', () => {
+test('Failed should throw error.', () => {
   expect(resolveUMDLibpath('foo')).rejects
-    .toEqual(new Error("[ResolveUMDLibpath] Can't find any file from 'foo'"))
+    .toBeInstanceOf(Error)
 })
 

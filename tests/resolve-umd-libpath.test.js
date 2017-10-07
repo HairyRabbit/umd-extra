@@ -1,26 +1,48 @@
 // -*- mode: js-jsx -*-
 // -*- coding: utf-8 -*-
-// @flow
 
 
 /// TESTS
 
 
-import { resolveUMDLibpath } from '../lib'
+import umdpath, { makeGlobPatten, matchLibname } from '../lib/resolve-umd-libpath'
 
 
-test('Find react@16 umd file', () => {
-  expect(resolveUMDLibpath('react')).resolves
-    .toEqual('node_modules/react/umd/react.production.min.js')
+describe('Find library umd file path', function () {
+  test('react', function () {
+    return expect(umdpath('react')).resolves
+      .toEqual('node_modules/react/umd/react.production.min.js')
+  })
+
+  test('jquery', function () {
+    return expect(umdpath('jquery')).resolves
+      .toEqual('node_modules/jquery/dist/jquery.min.js')
+  })
+
+  test('failed, foo', function () {
+    return expect(umdpath('foo')).rejects
+      .toEqual(expect.stringMatching(/umd-extra/))
+  })
 })
 
-test('Find jquery umd file', () => {
-  expect(resolveUMDLibpath('jquery')).resolves
-    .toEqual('node_modules/jquery/dist/jquery.min.js')
-})
+describe('Test helpers', function () {
+  
+  describe('makeGlobPatten()', function () {
+    test('usage', function () {
+      expect(makeGlobPatten(['foo', 'bar']))
+        .toBe('+(foo|bar)')
+    })
+  })  
 
-test('Failed should throw error.', () => {
-  expect(resolveUMDLibpath('foo')).rejects
-    .toBeInstanceOf(Error)
+  describe('matchLibname()', function () {
+    test('matched', function () {
+      expect(matchLibname('foo-bar', ['fooBar', 'foo-bar-baz']))
+        .toBe('fooBar')
+    })
+    
+    test('no matched', function () {
+      expect(matchLibname('foo-bar', ['fooBarQuxQuxx', 'foo-bar-baz']))
+        .toBe('foo-bar-baz')
+    })
+  })
 })
-

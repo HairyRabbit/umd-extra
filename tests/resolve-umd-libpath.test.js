@@ -26,7 +26,6 @@ describe('Find library umd file path', function () {
 })
 
 describe('Test helpers', function () {
-  
   describe('makeGlobPatten()', function () {
     test('usage', function () {
       expect(makeGlobPatten(['foo', 'bar']))

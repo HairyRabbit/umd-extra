@@ -4,14 +4,16 @@
 
 /// TESTS
 
-
 import { resolveUMDExportor } from '../lib'
-
 
 describe('Simple library', function () {
   test('react -> React', function () {
     return expect(resolveUMDExportor('react')).resolves
       .toEqual('React')
+  })
+  test('js-data -> JSData', function () {
+    return expect(resolveUMDExportor('js-data')).resolves
+      .toEqual('JSData')
   })
 })
 
@@ -29,7 +31,7 @@ describe('Library as a polyfill or plugin', function () {
   })
 })
 
-describe('Library have dependencies', function () {  
+describe('Library have dependencies', function () {
   test('react-dom -> ReactDOM', function () {
     return expect(resolveUMDExportor('react-dom')).resolves
       .toEqual('ReactDOM')
@@ -42,4 +44,10 @@ describe('Library have dependencies', function () {
     return expect(resolveUMDExportor('react-router-redux')).resolves
       .toEqual('ReactRouterRedux')
   })
+  test('js-data-http -> JSDataHttp', function () {
+    return expect(resolveUMDExportor('js-data-http')).resolves
+      .toEqual('JSDataHttp')
+  })
+
+  // TODO: Add test, nested peer dependencies.
 })

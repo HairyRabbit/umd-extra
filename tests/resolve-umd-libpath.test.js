@@ -4,9 +4,7 @@
 
 /// TESTS
 
-
 import umdpath, { makeGlobPatten, matchLibname } from '../lib/resolve-umd-libpath'
-
 
 describe('Find library umd file path', function () {
   test('react', function () {
@@ -31,14 +29,14 @@ describe('Test helpers', function () {
       expect(makeGlobPatten(['foo', 'bar']))
         .toBe('+(foo|bar)')
     })
-  })  
+  })
 
   describe('matchLibname()', function () {
     test('matched', function () {
       expect(matchLibname('foo-bar', ['fooBar', 'foo-bar-baz']))
         .toBe('fooBar')
     })
-    
+
     test('no matched', function () {
       expect(matchLibname('foo-bar', ['fooBarQuxQuxx', 'foo-bar-baz']))
         .toBe('foo-bar-baz')

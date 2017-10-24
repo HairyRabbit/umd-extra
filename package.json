@@ -1,0 +1,53 @@
+{
+    "name": "rabbit-umd-extra",
+    "version": "0.0.1",
+    "main": "dist/umd-extra.js",
+    "repository": "git@github.com:yuffiy/umd-extra.git",
+    "author": "Rabbit <yfhj1990@hotmail.com>",
+    "license": "GPL-3.0",
+    "bugs": {
+        "url": "https://github.com/yuffiy/umd-extra/issues/new",
+        "email": "Rabbit <yfhj1990@hotmail.com>"
+    },
+    "devDependencies": {
+        "babel-core": "^6.26.0",
+        "babel-jest": "^21.0.2",
+        "babel-plugin-lodash": "^3.2.11",
+        "babel-plugin-transform-class-properties": "^6.24.1",
+        "babel-preset-env": "^1.6.0",
+        "babel-preset-react": "^6.24.1",
+        "bootstrap": "4.0.0-beta",
+        "flow-bin": "^0.54.1",
+        "isomorphic-fetch": "^2.2.1",
+        "jest": "^21.1.0",
+        "jquery": "^3.2.1",
+        "js-data": "^3.0.1",
+        "js-data-http": "^3.0.0",
+        "lodash": "^4.17.4",
+        "popper.js": "^1.12.5",
+        "react": "^16.0.0",
+        "react-dom": "^16.0.0",
+        "react-router-dom": "^4.2.2",
+        "react-router-redux": "^4.0.8",
+        "rollup": "^0.50.0",
+        "rollup-plugin-babel": "^3.0.2",
+        "rollup-plugin-uglify": "^2.0.1"
+    },
+    "dependencies": {
+        "fs-extra": "^4.0.2",
+        "glob": "^7.1.2",
+        "jsdom": "^11.3.0"
+    },
+    "files": [
+        "dist",
+        "lib"
+    ],
+    "scripts": {
+        "test": "jest",
+        "typed": "flow",
+        "checkall": "yarn test && yarn typed",
+        "build:umd": "cross-env NODE_ENV=development rollup -c",
+        "build:umd:min": "cross-env NODE_ENV=production rollup -c",
+        "build": "yarn build:umd && yarn build:umd:min"
+    }
+}

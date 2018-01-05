@@ -23,6 +23,23 @@ describe('Find library umd file path', function () {
   })
 })
 
+describe('Find library umd file path for dev version.', function () {
+  test('react', function () {
+    return expect(umdpath('react', true)).resolves
+      .toEqual('node_modules/react/umd/react.development.js')
+  })
+
+  test('jquery', function () {
+    return expect(umdpath('jquery', true)).resolves
+      .toEqual('node_modules/jquery/dist/jquery.js')
+  })
+
+  test('failed, foo', function () {
+    return expect(umdpath('foo', true)).rejects
+      .toEqual(expect.stringMatching(/umd-extra/))
+  })
+})
+
 describe('Test helpers', function () {
   describe('makeGlobPatten()', function () {
     test('usage', function () {

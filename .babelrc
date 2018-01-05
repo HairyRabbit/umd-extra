@@ -1,18 +1,27 @@
 {
-    "presets": ["react", ["env", {
-        "target": {
-            "node": true
-        },
-        "modules": false,
-        "loose": true
-    }]],
+    "presets": [
+        "@babel/preset-react",
+        "@babel/preset-flow",
+        ["@babel/preset-env", {
+            "target": {
+                "node": true
+            },
+            "modules": false,
+            "loose": true
+        }]],
     "plugins": [
-        "transform-class-properties",
-        "lodash"
+        "@babel/plugin-proposal-class-properties",
+        "@babel/plugin-proposal-export-default-from",
+        "@babel/plugin-proposal-export-namespace-from",
+        ["@babel/plugin-proposal-object-rest-spread", {
+            "useBuiltIns": true
+        }],
+        "@babel/plugin-syntax-dynamic-import",
+        "babel-plugin-lodash"
     ],
     "env": {
         "test": {
-            "plugins": ["transform-es2015-modules-commonjs"]
+            "plugins": ["@babel/plugin-transform-modules-commonjs"]
         }
     }
 }

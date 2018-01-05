@@ -1,4 +1,5 @@
 import startCase from 'lodash/startCase'
+import json      from 'rollup-plugin-json'
 import babel     from 'rollup-plugin-babel'
 import uglify    from 'rollup-plugin-uglify'
 import pkg       from './package.json'
@@ -8,21 +9,32 @@ const name      = startCase(pkg.npmName).replace(/\s/g, '')
 const format    = 'umd'
 const sourcemap = true
 const globals = {
-  
+
 }
 
-let output, plugins = [ babel() ]
+let output, plugins = [
+  json({
+    exclude: [
+      'node_modules/**'
+    ]
+  }),
+  babel({
+    exclude: [
+      'node_modules/**'
+    ]
+  })
+]
 
 
 if(!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
   output = {
-    file: 'dist/webpack-resolve-library-plugin.js',
+    file: 'dist/umd-extra.js',
     format,
     sourcemap
   }
 } else {
   output = {
-    file: 'dist/webpack-resolve-library-plugin.min.js',
+    file: 'dist/umd-extra.min.js',
     format,
     sourcemap
   }
@@ -35,5 +47,5 @@ export default  {
   output,
   name,
   plugins,
-  globals  
+  globals
 }

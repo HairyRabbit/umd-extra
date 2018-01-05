@@ -1,7 +1,8 @@
 {
     "name": "rabbit-umd-extra",
-    "version": "0.0.1",
+    "version": "0.0.3",
     "main": "dist/umd-extra.js",
+    "npmName": "UMDExtra",
     "repository": "git@github.com:yuffiy/umd-extra.git",
     "author": "Rabbit <yfhj1990@hotmail.com>",
     "license": "GPL-3.0",
@@ -10,16 +11,22 @@
         "email": "Rabbit <yfhj1990@hotmail.com>"
     },
     "devDependencies": {
-        "babel-core": "^6.26.0",
-        "babel-jest": "^21.0.2",
-        "babel-plugin-lodash": "^3.2.11",
-        "babel-plugin-transform-class-properties": "^6.24.1",
-        "babel-preset-env": "^1.6.0",
-        "babel-preset-react": "^6.24.1",
+        "@babel/core": "^7.0.0-beta.36",
+        "@babel/plugin-proposal-class-properties": "^7.0.0-beta.36",
+        "@babel/plugin-proposal-export-default-from": "^7.0.0-beta.36",
+        "@babel/plugin-proposal-export-namespace-from": "^7.0.0-beta.36",
+        "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.36",
+        "@babel/plugin-syntax-dynamic-import": "^7.0.0-beta.36",
+        "@babel/preset-env": "^7.0.0-beta.36",
+        "@babel/preset-flow": "^7.0.0-beta.36",
+        "@babel/preset-react": "^7.0.0-beta.36",
+        "babel-core": "^7.0.0-bridge.0",
+        "babel-jest": "^22.0.4",
+        "babel-plugin-lodash": "^3.3.2",
         "bootstrap": "4.0.0-beta",
-        "flow-bin": "^0.54.1",
+        "flow-bin": "^0.62.0",
         "isomorphic-fetch": "^2.2.1",
-        "jest": "^21.1.0",
+        "jest": "^22.0.4",
         "jquery": "^3.2.1",
         "js-data": "^3.0.1",
         "js-data-http": "^3.0.0",
@@ -29,8 +36,9 @@
         "react-dom": "^16.0.0",
         "react-router-dom": "^4.2.2",
         "react-router-redux": "^4.0.8",
-        "rollup": "^0.50.0",
-        "rollup-plugin-babel": "^3.0.2",
+        "rollup": "^0.53.1",
+        "rollup-plugin-babel": "^4.0.0-beta.0",
+        "rollup-plugin-json": "^2.3.0",
         "rollup-plugin-uglify": "^2.0.1"
     },
     "dependencies": {
@@ -43,11 +51,12 @@
         "lib"
     ],
     "scripts": {
-        "test": "jest",
+        "test": "jest --verbose",
         "typed": "flow",
-        "checkall": "yarn test && yarn typed",
+        "test:all": "yarn test && yarn typed",
         "build:umd": "cross-env NODE_ENV=development rollup -c",
         "build:umd:min": "cross-env NODE_ENV=production rollup -c",
-        "build": "yarn build:umd && yarn build:umd:min"
+        "build:libdefs": "flow gen-flow-files lib/index.js > dist/umd-extra.js.flow",
+        "build": "yarn build:umd && yarn build:umd:min && yarn build:libdefs"
     }
 }

@@ -45,7 +45,7 @@ export default function exportName(libname: string, context?: string): Promise<?
         /**
          * if dep was a css lib, like normalize.css, return null as result
          */
-        if('.css' === path.extname(filePath)) {
+        if(!filePath || '.js' !== path.extname(filePath)) {
           resolve(null)
           return
         } else {

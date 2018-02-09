@@ -1,25 +1,22 @@
 {
     "name": "@rabbitcc/umd-extra",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "main": "dist/umd-extra.js",
-    "npmName": "UMDExtra",
-    "repository": "git@github.com:yuffiy/umd-extra.git",
-    "author": "Rabbit <yfhj1990@hotmail.com>",
+    "repository": "git@github.com:HairyRabbit/umd-extra.git",
+    "author": "HairyRabbit <yfhj1990@hotmail.com>",
     "license": "GPL-3.0",
     "bugs": {
-        "url": "https://github.com/yuffiy/umd-extra/issues/new",
-        "email": "Rabbit <yfhj1990@hotmail.com>"
+        "url": "https://github.com/HairyRabbit/umd-extra/issues/new",
+        "email": "HairyRabbit <yfhj1990@hotmail.com>"
     },
     "devDependencies": {
-        "@babel/core": "^7.0.0-beta.36",
-        "@babel/plugin-proposal-class-properties": "^7.0.0-beta.36",
-        "@babel/plugin-proposal-export-default-from": "^7.0.0-beta.36",
-        "@babel/plugin-proposal-export-namespace-from": "^7.0.0-beta.36",
-        "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.36",
-        "@babel/plugin-syntax-dynamic-import": "^7.0.0-beta.36",
-        "@babel/preset-env": "^7.0.0-beta.36",
-        "@babel/preset-flow": "^7.0.0-beta.36",
-        "@babel/preset-react": "^7.0.0-beta.36",
+        "@babel/core": "^7.0.0-beta.39",
+        "@babel/plugin-proposal-class-properties": "^7.0.0-beta.39",
+        "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.39",
+        "@babel/plugin-syntax-dynamic-import": "^7.0.0-beta.39",
+        "@babel/preset-env": "^7.0.0-beta.39",
+        "@babel/preset-flow": "^7.0.0-beta.39",
+        "@babel/preset-react": "^7.0.0-beta.39",
         "babel-core": "^7.0.0-bridge.0",
         "babel-jest": "^22.0.4",
         "babel-plugin-lodash": "^3.3.2",
@@ -37,9 +34,11 @@
         "react-router-dom": "^4.2.2",
         "react-router-redux": "^4.0.8",
         "rollup": "^0.53.1",
-        "rollup-plugin-babel": "^4.0.0-beta.0",
+        "rollup-plugin-babel": "^4.0.0-beta.1",
+        "rollup-plugin-commonjs": "^8.3.0",
         "rollup-plugin-json": "^2.3.0",
-        "rollup-plugin-uglify": "^2.0.1"
+        "rollup-plugin-node-resolve": "^3.0.2",
+        "rollup-plugin-uglify-es": "^0.0.1"
     },
     "dependencies": {
         "fs-extra": "^4.0.2",
@@ -47,16 +46,16 @@
         "jsdom": "^11.3.0"
     },
     "files": [
-        "dist",
         "lib"
     ],
     "scripts": {
         "test": "jest --verbose",
-        "typed": "flow",
-        "test:all": "yarn test && yarn typed",
-        "build:umd": "cross-env NODE_ENV=development rollup -c",
-        "build:umd:min": "cross-env NODE_ENV=production rollup -c",
-        "build:libdefs": "flow gen-flow-files lib/index.js > dist/umd-extra.js.flow",
-        "build": "yarn build:umd && yarn build:umd:min && yarn build:libdefs"
+        "test:type": "flow check",
+        "test:coverage": "yarn test --coverage",
+        "build": "cross-env NODE_ENV=development rollup -c",
+        "build:prod": "cross-env NODE_ENV=production rollup -c",
+        "build:type": "flow gen-flow-files src/index.js > lib/umd-extra.js.flow",
+        "start": "yarn build",
+        "prepublish": "yarn test:coverage && yarn test:type && yarn build:prod && yarn build:type"
     }
 }

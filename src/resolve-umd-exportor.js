@@ -35,7 +35,6 @@ export default function exportName(libname: string, context?: string): Promise<?
   // Cache all the window object keys.
   let cache: Cache
 
-
   // Create jsdom.
   const dom = new JSDOM('', { runScripts: 'outside-only' })
 
@@ -103,10 +102,10 @@ export function evalScript(dom: *, filepath: string) {
         dom.runVMScript(scripts)
         resolve(filepath)
       } catch (err) {
-        reject(new Error(`[umd-extra] \
-Catch vm eval scripts errors when eval '${filepath}'.
-
-${err}`))
+        console.warn(new Error(`[umd-extra] \
+Catch vm eval scripts errors when eval '${filepath}'.`))
+        console.error(err)
+        reject(err)
       }
     })
   }
@@ -124,14 +123,15 @@ export function evalScriptFromFile(dom: *, beforeEval?: Function): Function {
 }
 
 export function findDependencies(context?: string): Function {
+  const pathPrefix = context ? context.replace(/\\/, '/') + '/node_modules' : './node_modules'
   return (libname: string): Promise<Array<string>> => {
     return new Promise(function (resolve, reject) {
       let keys
       try {
-        const deps = require(`${libname}/package.json`).peerDependencies
+        const deps = require(path.resolve(`${pathPrefix}/${libname}/package.json`)).peerDependencies
         resolve(Object.keys(deps || {}))
       } catch (err) {
-        reject(new Error(`[umd-extra] \
+        console.error(new Error(`[umd-extra] \
 Can't find config file for '${libname}', please install at first.
 
 Use Yarn:
@@ -139,6 +139,7 @@ Use Yarn:
 Use Npm:
   npm install ${libname}
 `))
+        reject(err)
       }
     })
   }

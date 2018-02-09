@@ -1,5 +1,5 @@
 {
-    "name": "rabbit-umd-extra",
+    "name": "@rabbitcc/umd-extra",
     "version": "0.0.3",
     "main": "dist/umd-extra.js",
     "npmName": "UMDExtra",

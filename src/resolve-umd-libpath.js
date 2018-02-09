@@ -25,9 +25,13 @@ import path from 'path'
 import glob from 'glob'
 
 
-export default function exportPath(libname: string, isDev?: boolean, context?: string): Promise<?string> {
+export default function exportPath(libname: string,
+                                   isDev?: boolean,
+                                   context?: string,
+                                   warning?: boolean = true): Promise<?string> {
   const dirResolver = makeGlobPatten(['umd', 'dist', 'build', 'js'])
-  const directoryPath = `${context ? context.replace(/\\/, '/') + '/' : './'}node_modules/${libname}/`
+  const pathPrefix = context ? context.replace(/\\/, '/') + '/' : './'
+  const directoryPath = `${pathPrefix}node_modules/${libname}/`
   const umdPathName = `${dirResolver}/{${dirResolver}/,}`
   const fileName = !isDev
         ? '*([!.])?(.production).min.js'
@@ -46,20 +50,24 @@ export default function exportPath(libname: string, isDev?: boolean, context?: s
          */
         let main
         try {
-          main = require(`${libname}/package.json`).main
+          main = require(path.resolve(`${pathPrefix}node_modules/${libname}/package.json`)).main
         } catch(err) {}
 
         if(main) {
-          console.warn(`find ${libname} failed, resolve by main filed of package.json`)
-          resolve(`./node_modules/${libname}/${main}`)
+          if(warning) {
+            console.warn(`[umd-extra] Can't find ${libname}, resolve by main filed of package.json`)
+          }
+          resolve(`${pathPrefix}node_modules/${libname}/${main}`)
         } else {
-          console.warn(`[umd-extra] Can't find module path '${libname}'.`)
+          if(warning) {
+            console.warn(`[umd-extra] Can't find module path '${libname}'.`)
+          }
           resolve(null)
         }
       } else if (res.length === 1) {
         resolve(res[0])
       } else {
-        resolve(matchLibname(libname, res))
+        resolve(suggest(libname, res))
       }
     })
   })
@@ -90,22 +98,22 @@ export function makeGlobPatten (arr: Array<string>): string {
  *
  * @example
  * // 1. Most matching
- * matchLibname('foo', ['foo-bar', 'Foo'])
+ * suggest('foo', ['foo-bar', 'Foo'])
  *   //=> 'Foo'
  *
  * // 2. Deepest path
- * matchLibname('foo', ['dist/foo', 'dist/dist/foo'])
+ * suggest('foo', ['dist/foo', 'dist/dist/foo'])
  *   //=> 'dost/dist/foo'
  *
  * // 3. Shortest name
- * matchLibname('foo', ['fooBar', 'foo-bar-baz'])
+ * suggest('foo', ['fooBar', 'foo-bar-baz'])
  *   //=> 'fooBar'
  *
  * @param {string} libname
  * @param {Array<string>} arr - library paths
  * @return {string}
  */
-export function matchLibname (libname: string, arr: Array<string>): string {
+export function suggest (libname: string, arr: Array<string>): string {
   /**
    * Format libname when name ends with '.js'
    */

@@ -4,7 +4,7 @@
 
 /// TESTS
 
-import umdpath, { makeGlobPatten, matchLibname } from '../src/resolve-umd-libpath'
+import umdpath, { makeGlobPatten, suggest } from '../src/resolve-umd-libpath'
 
 describe('Find library umd file path', () => {
   test('react', () => {
@@ -20,6 +20,11 @@ describe('Find library umd file path', () => {
   test('normalize.css', () => {
     return expect(umdpath('normalize.css')).resolves
       .toEqual('./node_modules/normalize.css/normalize.css')
+  })
+
+  test('classnames', () => {
+    return expect(umdpath('classnames')).resolves
+      .toEqual('./node_modules/classnames/index.js')
   })
 
   test('failed, foo', () => {
@@ -51,14 +56,14 @@ describe('Test helpers', () => {
     })
   })
 
-  describe('matchLibname()', () => {
+  describe('suggest()', () => {
     test('matched', () => {
-      expect(matchLibname('foo-bar', ['fooBar', 'foo-bar-baz']))
+      expect(suggest('foo-bar', ['fooBar', 'foo-bar-baz']))
         .toBe('fooBar')
     })
 
     test('no matched', () => {
-      expect(matchLibname('foo-bar', ['fooBarQuxQuxx', 'foo-bar-baz']))
+      expect(suggest('foo-bar', ['fooBarQuxQuxx', 'foo-bar-baz']))
         .toBe('foo-bar-baz')
     })
   })

@@ -1,6 +1,6 @@
 {
     "name": "@rabbitcc/umd-extra",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "main": "dist/umd-extra.js",
     "repository": "git@github.com:HairyRabbit/umd-extra.git",
     "author": "HairyRabbit <yfhj1990@hotmail.com>",

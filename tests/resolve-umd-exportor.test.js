@@ -31,6 +31,13 @@ describe('Library as a polyfill or plugin', function () {
   })
 })
 
+describe('Library was null', function () {
+  test('jquery -> jQuery', function () {
+    return expect(exportName('normalize.css')).resolves
+      .toEqual(null)
+  })
+})
+
 describe('Library have dependencies', function () {
   test('react-dom -> ReactDOM', function () {
     return expect(exportName('react-dom')).resolves

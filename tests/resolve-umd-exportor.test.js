@@ -11,9 +11,15 @@ describe('Simple library', () => {
     return expect(exportName('react')).resolves
       .toEqual('React')
   })
+
   test('js-data -> JSData', () => {
     return expect(exportName('js-data')).resolves
       .toEqual('JSData')
+  })
+
+  test('prop-types -> PropTypes', () => {
+    return expect(exportName('prop-types')).resolves
+      .toEqual('PropTypes')
   })
 })
 

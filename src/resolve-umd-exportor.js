@@ -52,8 +52,7 @@ export default function exportName(libname: string, context?: string): Promise<?
             .then(recurFindDependencies(context))
             .then(deps => Promise.all(deps.map(dep => resolveUMDLibpath(dep, false, context))))
             .then(deps => Promise.all(deps.map(evalScriptFromFile(dom))))
-            .then(() => libname)
-            .then(resolveUMDLibpath)
+            .then(() => filePath)
             .then(evalScriptFromFile(dom, dom => cache = Object.keys(dom.window)))
             .then(() => {
               const name = Object.keys(omit(dom.window, cache))

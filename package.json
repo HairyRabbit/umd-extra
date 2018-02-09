@@ -31,7 +31,7 @@
         "lodash": "^4.17.4",
         "normalize.css": "^8.0.0",
         "popper.js": "^1.12.5",
-        "react": "^16.0.0",
+        "react": "^16.2.0",
         "react-dom": "^16.0.0",
         "react-router-dom": "^4.2.2",
         "react-router-redux": "^4.0.8",
@@ -45,7 +45,8 @@
     "dependencies": {
         "fs-extra": "^4.0.2",
         "glob": "^7.1.2",
-        "jsdom": "^11.3.0"
+        "jsdom": "^11.3.0",
+        "prop-types": "^15.6.0"
     },
     "files": [
         "lib"

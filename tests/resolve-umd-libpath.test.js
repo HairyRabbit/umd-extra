@@ -27,12 +27,17 @@ describe('Find library umd file path', () => {
       .toEqual('./node_modules/classnames/index.js')
   })
 
+  test('prop-types', () => {
+    return expect(umdpath('prop-types')).resolves
+      .toEqual('./node_modules/prop-types/prop-types.min.js')
+  })
+
   test('failed, foo', () => {
     return expect(umdpath('foo')).resolves.toBe(null)
   })
 })
 
-describe('Find library umd file path for dev version.', function () {
+describe('Find library umd file path for dev version.', () => {
   test('react', () => {
     return expect(umdpath('react', true)).resolves
       .toEqual('./node_modules/react/umd/react.development.js')

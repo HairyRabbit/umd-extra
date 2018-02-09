@@ -37,8 +37,8 @@ export default function exportPath(libname: string,
         ? '*([!.])?(.production).min.js'
         : '*([!.])?(.development).js'
   const libraryUMDPath = directoryPath + umdPathName + fileName
-  return new Promise(function (resolve, reject) {
-    glob(libraryUMDPath, function (err, res) {
+  return new Promise((resolve, reject) => {
+    glob(libraryUMDPath, (err, res) => {
       if (err) {
         reject(err)
         return
@@ -46,24 +46,38 @@ export default function exportPath(libname: string,
 
       if (res.length === 0) {
         /**
-         * can't find from libraryUMDPath, then find by main field of package.json
+         * can't find from libraryUMDPath
+         *
+         * 1. find same name file 'foo(.min)?.js' in libpath
+         * 2. then find by 'main' field of package.json
          */
-        let main
-        try {
-          main = require(path.resolve(`${pathPrefix}node_modules/${libname}/package.json`)).main
-        } catch(err) {}
+        glob(`${directoryPath}${libname}.min.js`, (err, res) => {
+          if(err) {
+            reject(err)
+            return
+          }
 
-        if(main) {
-          if(warning) {
-            console.warn(`[umd-extra] Can't find ${libname}, resolve by main filed of package.json`)
+          if(res.length) {
+            resolve(res[0])
+          } else {
+            let main
+            try {
+              main = require(path.resolve(`${pathPrefix}node_modules/${libname}/package.json`)).main
+            } catch(err) {}
+
+            if(main) {
+              if(warning) {
+                console.warn(`[umd-extra] Can't find ${libname}, resolve by main filed of package.json`)
+              }
+              resolve(`${pathPrefix}node_modules/${libname}/${main}`)
+            } else {
+              if(warning) {
+                console.warn(`[umd-extra] Can't find module path '${libname}'.`)
+              }
+              resolve(null)
+            }
           }
-          resolve(`${pathPrefix}node_modules/${libname}/${main}`)
-        } else {
-          if(warning) {
-            console.warn(`[umd-extra] Can't find module path '${libname}'.`)
-          }
-          resolve(null)
-        }
+        })
       } else if (res.length === 1) {
         resolve(res[0])
       } else {

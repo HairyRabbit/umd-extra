@@ -7,11 +7,11 @@
  *
  * @example
  *
- * const { resolveUMDLibpath } = require('rabbit-umd-extra')
+ * const { exportPath } = require('@rabbitcc/umd-extra')
  *
- * resolveUMDLibpath('jquery')
+ * exportPath('jquery')
  *   //=> 'node_modules/jquery/dist/jquery.min.js'
- * resolveUMDLibpath('react')
+ * exportPath('react')
  *   //=> 'node_modules/react/umd/react-production.min.js'
  *
  * @flow
@@ -25,7 +25,7 @@ import path               from 'path'
 import glob               from 'glob'
 
 
-export default function (libname: string, isDev?: boolean, context?: string): Promise<string> {
+export default function exportPath(libname: string, isDev?: boolean, context?: string): Promise<string> {
   const dirResolver    = makeGlobPatten(['umd', 'dist', 'build', 'js'])
   const directoryPath  = `${context ? context + '/' : ''}node_modules/${libname}/`
   const umdPathName    = `${dirResolver}/{${dirResolver}/,}`

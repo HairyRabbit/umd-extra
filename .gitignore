@@ -61,5 +61,5 @@ typings/
 flow-bin
 flow-typed/npm
 
-# Build directory
-dist
+# Projects
+lib

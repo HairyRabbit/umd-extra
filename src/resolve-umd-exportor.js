@@ -7,30 +7,30 @@
  *
  * @example
  *
- * const resolveUMDName = require('rabbit-resolve-umd-exportor')
+ * const { exportName } = require('@rabbitcc/umd-extra')
  *
- * resolveUMDName('jquery')           //=> jQuery
- * resolveUMDName('react')            //=> React
- * resolveUMDName('react-router-dom') //=> ReactRouterDOM
+ * exportName('jquery')           //=> jQuery
+ * exportName('react')            //=> React
+ * exportName('react-router-dom') //=> ReactRouterDOM
  *
  * // Library used by a polyfill
- * resolveUMDName('bootstrap')        //=> null
- * resolveUMDName('isomorphic-fetch') //=> null
+ * exportName('bootstrap')        //=> null
+ * exportName('isomorphic-fetch') //=> null
  *
  * @flow
  */
 
 import { omit, identity } from 'lodash'
-import { readFile }       from 'fs-extra'
-import { JSDOM }          from 'jsdom'
-import { Script }         from 'vm'
+import { readFile } from 'fs-extra'
+import { JSDOM } from 'jsdom'
+import { Script } from 'vm'
 import resolveUMDLibpath  from './resolve-umd-libpath.js'
 
 type Cache = Array<string>;
 
 const issueUrl: string = 'https://github.com/yuffiy/umd-extra/issues/new'
 
-export default function resolveUMDExport (libname: string, context?: string): Promise<?string> {
+export default function exportName(libname: string, context?: string): Promise<?string> {
   // Cache all the window object keys.
   let cache: Cache
 

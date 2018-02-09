@@ -1,51 +1,39 @@
-import startCase from 'lodash/startCase'
-import json      from 'rollup-plugin-json'
-import babel     from 'rollup-plugin-babel'
-import uglify    from 'rollup-plugin-uglify'
-import pkg       from './package.json'
+import path from 'path'
+import resolve from 'rollup-plugin-node-resolve'
+import json from 'rollup-plugin-json'
+import babel from 'rollup-plugin-babel'
+import commonjs from 'rollup-plugin-commonjs'
+import pkg from './package.json'
 
-const input     = 'lib/index.js'
-const name      = startCase(pkg.npmName).replace(/\s/g, '')
-const format    = 'umd'
-const sourcemap = true
-const globals = {
+export default [{
+  input: 'src/index.js',
+  output: 'lib/umd-extra.js'
+}].map(options => {
+  const input = path.resolve(options.input)
+  const output = path.resolve(options.output)
+  delete options.input
+  delete options.output
 
-}
-
-let output, plugins = [
-  json({
-    exclude: [
-      'node_modules/**'
-    ]
-  }),
-  babel({
-    exclude: [
-      'node_modules/**'
-    ]
-  })
-]
-
-
-if(!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-  output = {
-    file: 'dist/umd-extra.js',
-    format,
-    sourcemap
-  }
-} else {
-  output = {
-    file: 'dist/umd-extra.min.js',
-    format,
-    sourcemap
-  }
-
-  plugins.push(uglify())
-}
-
-export default  {
-  input,
-  output,
-  name,
-  plugins,
-  globals
-}
+  return Object.assign({}, {
+    input: path.resolve(input),
+    output: {
+      file: path.resolve(output),
+      format: 'cjs',
+      exports: 'named'
+    },
+    plugins: [].concat(
+      resolve({ preferBuiltins: true }),
+      babel({ exclude: 'node_modules/**' }),
+      json({ exclude: 'node_modules/**' }),
+      commonjs()
+    ),
+    external: [].concat(
+      Object.keys(Object.assign(
+        {},
+        pkg.dependencies,
+        pkg.optionalDependencies,
+        pkg.peerDependencies
+      ))
+    )
+  }, options)
+})

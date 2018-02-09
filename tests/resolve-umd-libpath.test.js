@@ -4,7 +4,7 @@
 
 /// TESTS
 
-import umdpath, { makeGlobPatten, matchLibname } from '../lib/resolve-umd-libpath'
+import umdpath, { makeGlobPatten, matchLibname } from '../src/resolve-umd-libpath'
 
 describe('Find library umd file path', function () {
   test('react', function () {

@@ -21,25 +21,46 @@
 /// CODE
 
 import { words, isEqual } from 'lodash'
-import path               from 'path'
-import glob               from 'glob'
+import path from 'path'
+import glob from 'glob'
 
 
-export default function exportPath(libname: string, isDev?: boolean, context?: string): Promise<string> {
-  const dirResolver    = makeGlobPatten(['umd', 'dist', 'build', 'js'])
-  const directoryPath  = `${context ? context + '/' : ''}node_modules/${libname}/`
-  const umdPathName    = `${dirResolver}/{${dirResolver}/,}`
-  const fileName       = !isDev
+export default function exportPath(libname: string, isDev?: boolean, context?: string): Promise<?string> {
+  const dirResolver = makeGlobPatten(['umd', 'dist', 'build', 'js'])
+  const directoryPath = `${context ? context.replace(/\\/, '/') + '/' : './'}node_modules/${libname}/`
+  const umdPathName = `${dirResolver}/{${dirResolver}/,}`
+  const fileName = !isDev
         ? '*([!.])?(.production).min.js'
         : '*([!.])?(.development).js'
   const libraryUMDPath = directoryPath + umdPathName + fileName
-
   return new Promise(function (resolve, reject) {
     glob(libraryUMDPath, function (err, res) {
-      if (err)                   return reject(err)
-      if (res.length === 0)      return reject(makeErrorMessage(libname))
-      else if (res.length === 1) return resolve(res[0])
-      else                       return resolve(matchLibname(libname, res))
+      if (err) {
+        reject(err)
+        return
+      }
+
+      if (res.length === 0) {
+        /**
+         * can't find from libraryUMDPath, then find by main field of package.json
+         */
+        let main
+        try {
+          main = require(`${libname}/package.json`).main
+        } catch(err) {}
+
+        if(main) {
+          console.warn(`find ${libname} failed, resolve by main filed of package.json`)
+          resolve(`./node_modules/${libname}/${main}`)
+        } else {
+          console.warn(`[umd-extra] Can't find module path '${libname}'.`)
+          resolve(null)
+        }
+      } else if (res.length === 1) {
+        resolve(res[0])
+      } else {
+        resolve(matchLibname(libname, res))
+      }
     })
   })
 }
@@ -99,23 +120,15 @@ export function matchLibname (libname: string, arr: Array<string>): string {
 
   const len = namecases.length
 
-  if (len === 1)    return namecases[0]
-  else if (len > 1) return namecases.sort().reverse()[0]
-  else              return arr.sort(sortByWordsLength)[0]
+  if (len === 1) {
+    return namecases[0]
+  } else if (len > 1) {
+    return namecases.sort().reverse()[0]
+  } else {
+    return arr.sort(sortByWordsLength)[0]
+  }
 
   function sortByWordsLength(a: string, b: string): number {
     return words(a).length - words(b).length
   }
-}
-
-function makeErrorMessage(libname: string, desc?: string): string {
-  desc = desc ? '\n' + desc : ''
-  return `[umd-extra] \
-Can't find module '${libname}'. You may need install it at first.${desc}
-
-Use Yarn:
-  yarn add ${libname}
-
-Use Npm:
-  npm install ${libname}`
 }

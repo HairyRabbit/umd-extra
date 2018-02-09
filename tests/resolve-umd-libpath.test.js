@@ -6,55 +6,58 @@
 
 import umdpath, { makeGlobPatten, matchLibname } from '../src/resolve-umd-libpath'
 
-describe('Find library umd file path', function () {
-  test('react', function () {
+describe('Find library umd file path', () => {
+  test('react', () => {
     return expect(umdpath('react')).resolves
-      .toEqual('node_modules/react/umd/react.production.min.js')
+      .toEqual('./node_modules/react/umd/react.production.min.js')
   })
 
-  test('jquery', function () {
+  test('jquery', () => {
     return expect(umdpath('jquery')).resolves
-      .toEqual('node_modules/jquery/dist/jquery.min.js')
+      .toEqual('./node_modules/jquery/dist/jquery.min.js')
   })
 
-  test('failed, foo', function () {
-    return expect(umdpath('foo')).rejects
-      .toEqual(expect.stringMatching(/umd-extra/))
+  test('normalize.css', () => {
+    return expect(umdpath('normalize.css')).resolves
+      .toEqual('./node_modules/normalize.css/normalize.css')
+  })
+
+  test('failed, foo', () => {
+    return expect(umdpath('foo')).resolves.toBe(null)
   })
 })
 
 describe('Find library umd file path for dev version.', function () {
-  test('react', function () {
+  test('react', () => {
     return expect(umdpath('react', true)).resolves
-      .toEqual('node_modules/react/umd/react.development.js')
+      .toEqual('./node_modules/react/umd/react.development.js')
   })
 
-  test('jquery', function () {
+  test('jquery', () => {
     return expect(umdpath('jquery', true)).resolves
-      .toEqual('node_modules/jquery/dist/jquery.js')
+      .toEqual('./node_modules/jquery/dist/jquery.js')
   })
 
-  test('failed, foo', function () {
-    return expect(umdpath('foo', true)).rejects
-      .toEqual(expect.stringMatching(/umd-extra/))
+  test('failed, foo', () => {
+    return expect(umdpath('foo', true)).resolves.toBe(null)
   })
 })
 
-describe('Test helpers', function () {
-  describe('makeGlobPatten()', function () {
-    test('usage', function () {
+describe('Test helpers', () => {
+  describe('makeGlobPatten()', () => {
+    test('usage', () => {
       expect(makeGlobPatten(['foo', 'bar']))
         .toBe('+(foo|bar)')
     })
   })
 
-  describe('matchLibname()', function () {
-    test('matched', function () {
+  describe('matchLibname()', () => {
+    test('matched', () => {
       expect(matchLibname('foo-bar', ['fooBar', 'foo-bar-baz']))
         .toBe('fooBar')
     })
 
-    test('no matched', function () {
+    test('no matched', () => {
       expect(matchLibname('foo-bar', ['fooBarQuxQuxx', 'foo-bar-baz']))
         .toBe('foo-bar-baz')
     })

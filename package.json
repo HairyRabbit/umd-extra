@@ -1,6 +1,6 @@
 {
   "name": "@rabbitcc/umd-extra",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "main": "lib/umd-extra.js",
   "repository": "git@github.com:HairyRabbit/umd-extra.git",
   "author": "HairyRabbit <yfhj1990@hotmail.com>",
@@ -17,6 +17,7 @@
     "@babel/preset-env": "^7.0.0-beta.39",
     "@babel/preset-flow": "^7.0.0-beta.39",
     "@babel/preset-react": "^7.0.0-beta.39",
+    "@rabbitcc/react-router-redux": "^5.0.0-alpha.9",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^22.0.4",
     "babel-plugin-lodash": "^3.3.2",
@@ -31,7 +32,6 @@
     "lodash": "^4.17.4",
     "normalize.css": "^8.0.0",
     "popper.js": "^1.12.5",
-    "@rabbitcc/react-router-redux": "^5.0.0-alpha.9",
     "react": "^16.2.0",
     "react-dom": "^16.0.0",
     "react-router-dom": "^4.2.2",

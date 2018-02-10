@@ -34,7 +34,7 @@
         "react": "^16.2.0",
         "react-dom": "^16.0.0",
         "react-router-dom": "^4.2.2",
-        "react-router-redux": "^4.0.8",
+        "react-router-redux": "^5.0.0-alpha.9",
         "rollup": "^0.53.1",
         "rollup-plugin-babel": "^4.0.0-beta.1",
         "rollup-plugin-commonjs": "^8.3.0",
@@ -52,7 +52,7 @@
         "lib"
     ],
     "scripts": {
-        "test": "jest --verbose",
+        "test": "jest",
         "test:type": "flow check",
         "test:coverage": "yarn test --coverage",
         "build": "cross-env NODE_ENV=development rollup -c",

@@ -127,8 +127,11 @@ export function findDependencies(context?: string): Function {
     return new Promise(function (resolve, reject) {
       let keys
       try {
-        const deps = require(path.resolve(`${pathPrefix}/${libname}/package.json`)).peerDependencies
-        resolve(Object.keys(deps || {}))
+        const pkg = require(path.resolve(`${pathPrefix}/${libname}/package.json`))
+        const deps = {
+            ...pkg.peerDependencies
+        }
+        resolve(Object.keys(deps))
       } catch (err) {
         console.error(new Error(`[umd-extra] \
 Can't find config file for '${libname}', please install at first.

@@ -28,7 +28,7 @@ import glob from 'glob'
 export default function exportPath(libname: string,
                                    isDev?: boolean,
                                    context?: string,
-                                   warning?: boolean = true): Promise<?string> {
+                                   log?: boolean = true): Promise<?string> {
   const dirResolver = makeGlobPatten(['umd', 'dist', 'build', 'js'])
   const pathPrefix = context ? context.replace(/\\/, '/') + '/' : './'
   const directoryPath = `${pathPrefix}node_modules/${libname}/`
@@ -66,12 +66,12 @@ export default function exportPath(libname: string,
             } catch(err) {}
 
             if(main) {
-              if(warning) {
+              if(log) {
                 console.warn(`[umd-extra] Can't find ${libname}, resolve by main filed of package.json`)
               }
               resolve(`${pathPrefix}node_modules/${libname}/${main}`)
             } else {
-              if(warning) {
+              if(log) {
                 console.warn(`[umd-extra] Can't find module path '${libname}'.`)
               }
               resolve(null)

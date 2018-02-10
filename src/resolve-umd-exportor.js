@@ -31,7 +31,7 @@ type Cache = Array<string>;
 
 const issueUrl: string = 'https://github.com/yuffiy/umd-extra/issues/new'
 
-export default function exportName(libname: string, context?: string): Promise<?string> {
+export default function exportName(libname: string, context?: string, log?: boolean = true): Promise<?string> {
   // Cache all the window object keys.
   let cache: Cache
 
@@ -49,11 +49,11 @@ export default function exportName(libname: string, context?: string): Promise<?
           return
         } else {
           Promise.resolve(libname)
-            .then(recurFindDependencies(context))
+            .then(recurFindDependencies(context, log))
             .then(deps => Promise.all(deps.map(dep => resolveUMDLibpath(dep, false, context, false))))
             .then(deps => Promise.all(deps.map(evalScriptFromFile(dom))))
             .then(() => filePath)
-            .then(evalScriptFromFile(dom, dom => cache = Object.keys(dom.window)))
+            .then(evalScriptFromFile(dom, dom => cache = Object.keys(dom.window), log))
             .then(() => {
               const name = Object.keys(omit(dom.window, cache))
                 .filter(str => !str.startsWith('_')
@@ -64,8 +64,9 @@ export default function exportName(libname: string, context?: string): Promise<?
                 resolve(name[0])
                 return
               } else {
-                // Report can't find warning.
-                console.warn(`[umd-extra] Can't find any global name from \
+                if(log) {
+                  // Report can't find warning.
+                  console.warn(`[umd-extra] Can't find any global name from \
 '${libname}'.
 
   1. ${libname} was a plugin or polyfill. Some usage like:
@@ -75,6 +76,7 @@ export default function exportName(libname: string, context?: string): Promise<?
 
   2. A bug, please report it at ${issueUrl}
 `)
+                }
                 resolve(null)
               }
             })
@@ -94,34 +96,38 @@ ${content.toString()}
 }.bind(window))()`, {})
 }
 
-export function evalScript(dom: *, filepath: string) {
+export function evalScript(dom: *, filepath: string, log?: boolean = true) {
   return function (scripts: *): Promise<*> {
     return new Promise(function (resolve, reject) {
       try {
         dom.runVMScript(scripts)
         resolve(filepath)
       } catch (err) {
-        console.warn(new Error(`[umd-extra] \
-Catch vm eval scripts errors when eval '${filepath}'.`))
-        console.error(err)
+        if(log) {
+          err.message += `[umd-extra] \
+Catch vm eval scripts errors when eval '${filepath}'.`
+          console.error(err)
+        }
         reject(err)
       }
     })
   }
 }
 
-export function evalScriptFromFile(dom: *, beforeEval?: Function): Function {
+export function evalScriptFromFile(dom: *,
+                                   beforeEval?: Function,
+                                   log?: boolean = true): Function {
   return function (filepath: string): Promise<*> {
     beforeEval = beforeEval || (dom => identity)
     return Promise.resolve(filepath)
       .then(readFile)
       .then(makeVMScript)
       .then(beforeEval(dom))
-      .then(evalScript(dom, filepath))
+      .then(evalScript(dom, filepath, log))
   }
 }
 
-export function findDependencies(context?: string): Function {
+export function findDependencies(context?: string, log?: boolean = true): Function {
   const pathPrefix = context ? context.replace(/\\/, '/') + '/node_modules' : './node_modules'
   return (libname: string): Promise<Array<string>> => {
     return new Promise(function (resolve, reject) {
@@ -133,7 +139,8 @@ export function findDependencies(context?: string): Function {
         }
         resolve(Object.keys(deps))
       } catch (err) {
-        console.error(new Error(`[umd-extra] \
+        if(log) {
+          console.error(new Error(`[umd-extra] \
 Can't find config file for '${libname}', please install at first.
 
 Use Yarn:
@@ -141,13 +148,14 @@ Use Yarn:
 Use Npm:
   npm install ${libname}
 `))
+        }
         reject(err)
       }
     })
   }
 }
 
-export function recurFindDependencies(context?: string): Function {
+export function recurFindDependencies(context?: string, log?: boolean = true): Function {
   return (libname: string): Promise<Array<string>> => {
     // Store peer dependencies.
     let collects = []
@@ -157,7 +165,7 @@ export function recurFindDependencies(context?: string): Function {
     function recur (libname) {
       return new Promise(function (resolve, reject) {
         Promise.resolve(libname)
-          .then(findDependencies(context))
+          .then(findDependencies(context, log))
           .then(setCollects)
           .then(resolve)
           .catch(reject)
@@ -175,10 +183,6 @@ export function recurFindDependencies(context?: string): Function {
           })
 
           return Promise.all(promises)
-        }
-
-        function done () {
-          return resolve(collects)
         }
       })
     }

@@ -1,6 +1,6 @@
 {
   "name": "@rabbitcc/umd-extra",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "main": "lib/umd-extra.js",
   "repository": "git@github.com:HairyRabbit/umd-extra.git",
   "author": "HairyRabbit <yfhj1990@hotmail.com>",
@@ -55,11 +55,11 @@
   "scripts": {
     "test": "jest",
     "test:type": "flow check",
-    "test:coverage": "yarn test --coverage",
+    "test:co": "yarn test --coverage",
     "build": "cross-env NODE_ENV=development rollup -c",
     "build:prod": "cross-env NODE_ENV=production rollup -c",
     "build:type": "flow gen-flow-files src/index.js > lib/umd-extra.js.flow",
     "start": "yarn build",
-    "prepublish": "yarn test:coverage && yarn test:type && yarn build:prod && yarn build:type"
+    "prepublish": "yarn test:co && yarn test:type && yarn build:prod && yarn build:type"
   }
 }

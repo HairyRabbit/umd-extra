@@ -1,10 +1,13 @@
-// -*- mode: js-jsx -*-
-// -*- coding: utf-8 -*-
+/**
+ * @jest
+ */
 
-
-/// TESTS
-
+import path from 'path'
 import umdpath, { makeGlobPatten, suggest } from '../src/resolve-umd-libpath'
+
+beforeEach(() => {
+  jest.resetModules();
+})
 
 describe('Find library umd file path', () => {
   test('react', () => {
@@ -72,4 +75,33 @@ describe('Test helpers', () => {
         .toBe('foo-bar-baz')
     })
   })
+})
+
+test('should reject when glob throw error', () => {
+  jest.doMock('glob', () => {
+    return (_, cb) => cb(42)
+  })
+  const umdPath = require('../src/resolve-umd-exportor').default
+  return expect(umdPath('foo')).rejects.toBe(42)
+})
+
+test('should reject when glob min file throw error', () => {
+  jest.doMock('glob', () => {
+    return (p, cb) => /\+\(umd/.test(p) ? cb(null, []) : cb(42)
+  })
+  const umdPath = require('../src/resolve-umd-exportor').default
+  return expect(umdPath('foo')).rejects.toBe(42)
+})
+
+test('react with context', () => {
+  return expect(umdpath('react', false, process.cwd())).resolves
+    .toMatch('node_modules/react/umd/react.production.min.js')
+})
+
+test('should be null when fine failed', () => {
+  jest.doMock('glob', () => {
+    return (_, cb) => cb(null, [])
+  })
+  const umdPath = require('../src/resolve-umd-exportor').default
+  return expect(umdPath('foo')).resolves.toBe(null)
 })

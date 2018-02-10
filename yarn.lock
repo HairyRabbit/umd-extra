@@ -527,6 +527,14 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
+"@rabbitcc/react-router-redux@^5.0.0-alpha.9":
+  version "5.0.0-alpha.9"
+  resolved "https://registry.yarnpkg.com/@rabbitcc/react-router-redux/-/react-router-redux-5.0.0-alpha.9.tgz#a2fd81bfe263a80c8e3907e0003f638527442d0a"
+  dependencies:
+    history "^4.7.2"
+    prop-types "^15.6.0"
+    react-router "^4.2.0"
+
 "@types/node@^6.0.46":
   version "6.0.88"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-6.0.88.tgz#f618f11a944f6a18d92b5c472028728a3e3d4b66"

@@ -39,7 +39,7 @@ export default function exportName(libname: string, context?: string): Promise<?
   const dom = new JSDOM('', { runScripts: 'outside-only' })
 
   return new Promise(function (resolve, reject) {
-    resolveUMDLibpath(libname, false, context)
+    resolveUMDLibpath(libname, false, context, false)
       .then(filePath => {
         /**
          * if dep was a css lib, like normalize.css, return null as result
@@ -50,7 +50,7 @@ export default function exportName(libname: string, context?: string): Promise<?
         } else {
           Promise.resolve(libname)
             .then(recurFindDependencies(context))
-            .then(deps => Promise.all(deps.map(dep => resolveUMDLibpath(dep, false, context))))
+            .then(deps => Promise.all(deps.map(dep => resolveUMDLibpath(dep, false, context, false))))
             .then(deps => Promise.all(deps.map(evalScriptFromFile(dom))))
             .then(() => filePath)
             .then(evalScriptFromFile(dom, dom => cache = Object.keys(dom.window)))

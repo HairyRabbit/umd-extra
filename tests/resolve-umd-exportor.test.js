@@ -54,7 +54,7 @@ describe('Library have dependencies', () => {
       .toEqual('ReactRouterDOM')
   })
   test('react-router-redux -> ReactRouterRedux', () => {
-    return expect(exportName('react-router-redux')).resolves
+    return expect(exportName('@rabbitcc/react-router-redux')).resolves
       .toEqual('ReactRouterRedux')
   })
   test('js-data-http -> JSDataHttp', () => {
